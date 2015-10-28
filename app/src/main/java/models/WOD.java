@@ -2,6 +2,7 @@ package models;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Kevin on 21-09-2015.
@@ -14,7 +15,7 @@ public class WOD {
     private boolean isBenchmark;
     private long startTime;
     private long endTime;
-    private ArrayList<BaseExercise> exercises = new ArrayList<BaseExercise>();
+    private CopyOnWriteArrayList<BaseExercise> exercises = new CopyOnWriteArrayList<BaseExercise>();
     private ArrayList<String> notes = new ArrayList<String>();
     private int currentExercise = 0;
 
@@ -24,10 +25,10 @@ public class WOD {
     }
 
     public int nextExercise(){
-        if(currentExercise < exercises.size()-1){
+        //if(currentExercise < exercises.size()){
             return currentExercise++;
-        }
-        return -1;
+        //s}
+        //return -1;
     }
 
 
@@ -113,11 +114,11 @@ public class WOD {
         this.endTime = endTime;
     }
 
-    public ArrayList<BaseExercise> getExercises() {
+    public CopyOnWriteArrayList<BaseExercise> getExercises() {
         return exercises;
     }
 
-    public void setExercises(ArrayList<BaseExercise> exercises) {
+    public void setExercises(CopyOnWriteArrayList<BaseExercise> exercises) {
         this.exercises = exercises;
     }
 

@@ -23,6 +23,18 @@
             android:background="#00DD00"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save to Server"
+            android:id="@+id/button2"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="53dp"
+            android:layout_marginStart="53dp"
+            android:layout_marginBottom="47dp" />
     </RelativeLayout>
 
 </LinearLayout>

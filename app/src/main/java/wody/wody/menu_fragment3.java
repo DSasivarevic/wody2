@@ -41,7 +41,7 @@ public class menu_fragment3 extends Fragment {
 
         Classifier cls = null;
         try {
-            cls = (Classifier) weka.core.SerializationHelper.read("assets/test.txt");
+            cls = (Classifier) weka.core.SerializationHelper.read("test.txt");
         } catch (Exception e) {
             e.printStackTrace();
         }

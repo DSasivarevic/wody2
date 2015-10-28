@@ -1,45 +1,49 @@
 package controllers;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
-
-import models.WOD;
 
 /**
  * Created by dasas on 07/10/15.
  */
 public class Server {
 
-    public void saveWOD(WOD wod){
+    public void saveWOD(String wod){
         new WODSave(wod).execute();
     }
 
 
-    private class WODSave extends AsyncTask<Void, Void, Void> {
 
-        private WOD w;
-        public WODSave(WOD w){
-            this.w = w;
+    private class WODSave extends AsyncTask<String, Void, Void> {
+
+        private String w;
+        public WODSave(String s){
+            this.w = s;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
             try {
-                //Gson gson = new Gson();
-                //String s = gson.toJson(w);
-                String s = "";
+                //String s = "";
+                Log.d("ERROR", "HTTP CONNECT");
+
                 HttpURLConnection con = startServer("wod_save.php");
-                con.getOutputStream().write(("wod="+s).getBytes());
+
+                con.getOutputStream().write(("wod=" + w).getBytes());
+
 
                 Scanner scanner = new Scanner(con.getInputStream());
+                Log.d("ERROR", "HTTP CONNECT2");
+
                 String s1 = "";
                 while (scanner.hasNext()) {
                     s1 += scanner.nextLine();
                 }
-                System.out.println(s1);
+                Log.d("ERROR",s1);
                 scanner.close();
 
             } catch (Exception e) {

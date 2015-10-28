@@ -2,6 +2,7 @@ package wody.wody;
 
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -9,10 +10,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.google.gson.Gson;
 
 import controllers.Server;
 import models.SensorData;
@@ -33,6 +37,7 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootview = inflater.inflate(R.layout.menu2_layout, container, false);
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mSensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
         acSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -40,7 +45,8 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
         mSensorManager.registerListener(this, acSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         final Button btn = (Button) rootview.findViewById(R.id.btnStart);
-
+        final Button btn2 = (Button) rootview.findViewById(R.id.button2);
+        btn2.setVisibility(View.GONE);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,28 +57,45 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
                     ex.start();
                     btn.setText(ex.getRepetitions()+ " " + ex.getName());
                 }else{
-                    TimeExercise old_ex = (TimeExercise) wod.getExercises().get(wod.getCurrentExercise());
-                    old_ex.stop();
+
                     int next = wod.nextExercise();
-                    if(next != -1) {
-                        TimeExercise ex = (TimeExercise) wod.getExercises().get(wod.getCurrentExercise());
+                    Log.e("ERROR", "" + next);
+                    if(next < wod.getExercises().size()) {
+                        Log.e("ERROR", ""+wod.getExercises().size());
+                        TimeExercise old_ex = (TimeExercise) wod.getExercises().get(next);
+                        old_ex.stop();
+                        TimeExercise ex = (TimeExercise) wod.getExercises().get(next);
                         btn.setText(ex.getRepetitions() + " " + ex.getName());
                         ex.start();
                     }
-                    else if(next==-1){
+                    else{
+                        TimeExercise old_ex = (TimeExercise) wod.getExercises().get(wod.getExercises().size()-1);
                         old_ex.stop();
                         wod.stop();
                         btn.setText("DONE");
-                        Server server = new Server();
-                        server.saveWOD(wod);
+                        btn2.setVisibility(View.VISIBLE);
                         btn.setBackgroundColor(Color.GRAY);
+
+
                     }
 
                 }
 
             }
         });
-        wod = new WOD("Half-cindy","",1);
+
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Server server = new Server();
+                Gson gson = new Gson();
+                String s = gson.toJson(wod);
+                server.saveWOD(s);
+            }
+        });
+        wod = new WOD("Half-cindy","",2);
+        wod.addExercise(new TimeExercise("Push-ups", 5));
+        wod.addExercise(new TimeExercise("Sit-ups", 10));
         wod.addExercise(new TimeExercise("Push-ups", 5));
         wod.addExercise(new TimeExercise("Sit-ups", 10));
         return rootview;
