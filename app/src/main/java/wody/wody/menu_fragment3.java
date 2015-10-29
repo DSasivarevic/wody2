@@ -45,6 +45,8 @@ public class menu_fragment3 extends Fragment implements SensorEventListener,
     private View mChart;
     private TextView count;
     private NumberPicker picker;
+    private float ALPHA = 0.50f;
+    private float[] filterarray;
 
 
     @Nullable
@@ -107,13 +109,22 @@ public class menu_fragment3 extends Fragment implements SensorEventListener,
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (started) {
-            double x = event.values[0];
-            double y = event.values[1];
-            double z = event.values[2];
+            filterarray = lowPass(event.values.clone(), filterarray);
+            double x = filterarray[0];
+            double y = filterarray[1];
+            double z = filterarray[2];
+
             long timestamp = System.currentTimeMillis();
             AccelData data = new AccelData(timestamp, x, y, z);
             sensorData.add(data);
         }
+    }
+    protected float[] lowPass( float[] input, float[] output ) {
+        if ( output == null ) return input;
+        for ( int i=0; i<input.length; i++ ) {
+            output[i] = output[i] + ALPHA * (input[i] - output[i]);
+        }
+        return output;
     }
 
     @Override
