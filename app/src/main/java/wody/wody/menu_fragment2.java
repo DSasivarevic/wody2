@@ -15,8 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+
+import java.util.Arrays;
 
 import controllers.Server;
 import models.SensorData;
@@ -42,7 +45,7 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
         mSensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
         acSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        mSensorManager.registerListener(this, acSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, acSensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         final Button btn = (Button) rootview.findViewById(R.id.btnStart);
         final Button btn2 = (Button) rootview.findViewById(R.id.button2);
@@ -52,24 +55,23 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
             public void onClick(View v) {
                 wod.start();
                 btn.setBackgroundColor(Color.RED);
-                if(btn.getText().equals("Start")){
+                if (btn.getText().equals("Start")) {
                     TimeExercise ex = (TimeExercise) wod.getExercises().get(wod.getCurrentExercise());
                     ex.start();
-                    btn.setText(ex.getRepetitions()+ " " + ex.getName());
-                }else{
+                    btn.setText(ex.getRepetitions() + " " + ex.getName());
+                } else {
 
                     int next = wod.nextExercise();
                     Log.e("ERROR", "" + next);
-                    if(next < wod.getExercises().size()) {
-                        Log.e("ERROR", ""+wod.getExercises().size());
+                    if (next < wod.getExercises().size()) {
+                        Log.e("ERROR", "" + wod.getExercises().size());
                         TimeExercise old_ex = (TimeExercise) wod.getExercises().get(next);
                         old_ex.stop();
                         TimeExercise ex = (TimeExercise) wod.getExercises().get(next);
                         btn.setText(ex.getRepetitions() + " " + ex.getName());
                         ex.start();
-                    }
-                    else{
-                        TimeExercise old_ex = (TimeExercise) wod.getExercises().get(wod.getExercises().size()-1);
+                    } else {
+                        TimeExercise old_ex = (TimeExercise) wod.getExercises().get(wod.getExercises().size() - 1);
                         old_ex.stop();
                         wod.stop();
                         btn.setText("DONE");
@@ -91,22 +93,29 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
                 Gson gson = new Gson();
                 String s = gson.toJson(wod);
                 server.saveWOD(s);
+                Toast.makeText(rootview.getContext(), "SAVED TO SERVER", Toast.LENGTH_LONG);
             }
         });
-        wod = new WOD("Half-cindy","",2);
-        wod.addExercise(new TimeExercise("Push-ups", 5));
+        wod = new WOD("Joergen","",2);
+        wod.addExercise(new TimeExercise("Push-ups", 10));
         wod.addExercise(new TimeExercise("Sit-ups", 10));
-        wod.addExercise(new TimeExercise("Push-ups", 5));
-        wod.addExercise(new TimeExercise("Sit-ups", 10));
+        wod.addExercise(new TimeExercise("Air Squat", 10));
+        //wod.addExercise(new TimeExercise("Sit-ups", 10));
         return rootview;
     }
 
     @Override
     public void onSensorChanged(SensorEvent evt) {
+        Log.e("Testing", Arrays.toString(evt.values));
+
         //x = evt.values[0], y = evt.values[1], z = evt.values[2], timestamp = evt.timestamp
-        TimeExercise ex = (TimeExercise)wod.getExercises().get(0);
-        SensorData s = new SensorData(evt.values, evt.timestamp);
-        ex.addData(s);
+        if(wod.getCurrentExercise() < wod.getExercises().size()){
+            TimeExercise ex = (TimeExercise)wod.getExercises().get(wod.getCurrentExercise());
+            SensorData s = new SensorData(evt.values, evt.timestamp);
+            //Log.e("Testing", s.getData().toString());
+            ex.addData(s);
+        }
+
         //Log.d(""+Log.VERBOSE,""+evt.values[0]);
     }
 
