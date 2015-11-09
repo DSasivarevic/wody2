@@ -1,7 +1,13 @@
 package models;
 
+import android.content.Context;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import weka.classifiers.Classifier;
 import weka.core.Attribute;
@@ -14,26 +20,26 @@ import weka.core.converters.ConverterUtils;
  * Created by Falch on 07/11/15.
  */
 public class ExercisePrediction {
-    private InputStream wodModel;
     private Classifier cls = null;
     private Instances instance = null;
 
-    public ExercisePrediction(InputStream stream) {
-        wodModel = stream;
-
+    public ExercisePrediction(Context context, String modelName) {
         //ceate classifier
         try {
-            cls = (Classifier) weka.core.SerializationHelper.read(stream);
+            InputStream wodModel = context.getAssets().open(modelName);
+            cls = (Classifier) weka.core.SerializationHelper.read(wodModel);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     //get prediction from arff
-    public void getPrediction(InputStream arff){
-        ConverterUtils.DataSource source = new ConverterUtils.DataSource(arff);
+    public void getPrediction(Context context, String arffName){
         Instances instances = null;
+
         try {
+            InputStream arffFile = context.getAssets().open(arffName);
+            ConverterUtils.DataSource source = new ConverterUtils.DataSource(arffFile);
             instances = source.getDataSet();
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,14 +81,28 @@ public class ExercisePrediction {
         instance = createInstance(x, y, z);
         double predictionValue = cls.classifyInstance(instance.firstInstance());
         double[] destributionValue = cls.distributionForInstance(instance.firstInstance());
-
-        System.out.println("prediction value: " + predictionValue);
         String prediction = instance.classAttribute().value((int) predictionValue);
 
-
-        System.out.println("The predicted value of instance: " + prediction);
-
         return prediction;
+    }
+
+    //get prediction from list
+    public String getPrediction(ArrayList<SensorData> list) throws Exception {
+        Map exerciseMap = new HashMap();
+
+        for (SensorData dataPoint : list){
+            double x = dataPoint.getData()[0];
+            double y = dataPoint.getData()[1];
+            double z = dataPoint.getData()[2];
+
+            instance = createInstance(x, y, z);
+            double predictionValue = cls.classifyInstance(instance.firstInstance());
+
+            int count = (int)(exerciseMap.containsKey(predictionValue) ? exerciseMap.get(predictionValue) : 0);
+            exerciseMap.put(predictionValue, count + 1);
+        }
+
+        return null;
     }
 
     public Instances createInstance(double x, double y, double z){
