@@ -1,40 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <RadioGroup
+        android:id="@+id/Exercise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="2"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/btnStart"
+        android:layout_alignStart="@+id/btnStart"
+        android:layout_marginTop="75dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal">
+        <RadioButton
+            android:id="@+id/PushUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Push-ups"
+            android:checked="true" />
 
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:text="START"
-            android:id="@+id/btnStart"
-            android:background="#00DD00"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+        <RadioButton
+            android:id="@+id/SitUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sit-ups" />
+
+        <RadioButton
+            android:id="@+id/AirSquat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Air Squat" />
+    </RadioGroup>
+
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save to Server"
             android:id="@+id/button2"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="53dp"
-            android:layout_marginStart="53dp"
-            android:layout_marginBottom="47dp" />
-    </RelativeLayout>
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/wodName"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp" />
 
-</LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start"
+            android:id="@+id/btnStart"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/Exercise"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dp" />
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/wodName"
+        android:layout_marginTop="31dp"
+        android:layout_below="@+id/btnStart"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

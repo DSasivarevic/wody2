@@ -15,6 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -39,6 +42,8 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootview = inflater.inflate(R.layout.menu2_layout, container, false);
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        final RadioGroup radioExerciseGroup = (RadioGroup) rootview.findViewById(R.id.Exercise);
+        String wodName = "";
 
         mSensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
         acSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -51,18 +56,23 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int checkedId = radioExerciseGroup.getCheckedRadioButtonId();
+                RadioButton checkedRadioButton = (RadioButton) rootview.findViewById(checkedId);
+                String text = checkedRadioButton.getText().toString();
                 wod.start();
                 btn.setBackgroundColor(Color.RED);
+                wod.setName(((TextView) rootview.findViewById(R.id.wodName)).getText().toString());
                 if (btn.getText().equals("Start")) {
+                    wod.addExercise(new TimeExercise(text, 10));
                     TimeExercise ex = (TimeExercise) wod.getExercises().get(wod.getCurrentExercise());
                     ex.start();
                     btn.setText(ex.getRepetitions() + " " + ex.getName());
                 } else {
 
                     int next = wod.nextExercise();
-                    Log.e("ERROR", "" + next);
+//                    Log.e("ERROR", "" + next);
                     if (next < wod.getExercises().size()) {
-                        Log.e("ERROR", "" + wod.getExercises().size());
+//                        Log.e("ERROR", "" + wod.getExercises().size());
                         TimeExercise old_ex = (TimeExercise) wod.getExercises().get(next);
                         old_ex.stop();
                         TimeExercise ex = (TimeExercise) wod.getExercises().get(next);
@@ -75,7 +85,6 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
                         btn.setText("DONE");
                         btn2.setVisibility(View.VISIBLE);
                         btn.setBackgroundColor(Color.GRAY);
-
 
                     }
 
@@ -94,17 +103,21 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
                 Toast.makeText(rootview.getContext(), "SAVED TO SERVER", Toast.LENGTH_LONG);
             }
         });
-        wod = new WOD("Joergen","",2);
-        wod.addExercise(new TimeExercise("Push-ups", 10));
-        wod.addExercise(new TimeExercise("Sit-ups", 10));
-        wod.addExercise(new TimeExercise("Air Squat", 10));
+
+        int checkedId = radioExerciseGroup.getCheckedRadioButtonId();
+        RadioButton checkedRadioButton = (RadioButton) rootview.findViewById(checkedId);
+        String text = checkedRadioButton.getText().toString();
+
+        wod = new WOD("","",1);
+//        wod.addExercise(new TimeExercise(text, 10));
+//        wod.addExercise(new TimeExercise("Sit-ups", 10));
+//        wod.addExercise(new TimeExercise("Air Squat", 10));
         //wod.addExercise(new TimeExercise("Sit-ups", 10));
         return rootview;
     }
 
     @Override
     public void onSensorChanged(SensorEvent evt) {
-        //Log.e("Testing", Arrays.toString(evt.values));
 
         //x = evt.values[0], y = evt.values[1], z = evt.values[2], timestamp = evt.timestamp
         if(wod.getCurrentExercise() < wod.getExercises().size()){
