@@ -30,10 +30,10 @@ public class menu_fragment1 extends Fragment {
         final TextView textView = (TextView) rootview.findViewById(R.id.screen);
         Context context = getActivity().getApplicationContext();
 
-        final ExercisePrediction ep = new ExercisePrediction(context, "model_8000.model");
+        final ExercisePrediction ep = new ExercisePrediction(context, "model_40000.model");
 
         //print result from arff file
-        ep.getPrediction(context, "wodData.arff", 3);
+        ep.getPrediction(context, "KevinTestData.arff", 5);
 
         //get prediction from single instance
         final Button button = (Button) rootview.findViewById(R.id.button);
