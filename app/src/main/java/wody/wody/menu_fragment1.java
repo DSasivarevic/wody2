@@ -33,7 +33,7 @@ public class menu_fragment1 extends Fragment {
         final ExercisePrediction ep = new ExercisePrediction(context, "model_8000.model");
 
         //print result from arff file
-        ep.getPrediction(context, "wodData.arff");
+        ep.getPrediction(context, "wodData.arff", 3);
 
         //get prediction from single instance
         final Button button = (Button) rootview.findViewById(R.id.button);
@@ -50,7 +50,7 @@ public class menu_fragment1 extends Fragment {
 
                     String prediction = ep.getPrediction(xvalue, zvalue, yvalue);
 
-                    System.out.println("The predicted value of instance: "+prediction);
+//                    System.out.println("The predicted value of instance: "+prediction);
                     textView.setText(prediction);
 
                 }catch (NumberFormatException e){

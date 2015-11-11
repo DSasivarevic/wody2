@@ -34,7 +34,7 @@ public class ExercisePrediction {
     }
 
     //get prediction from arff
-    public void getPrediction(Context context, String arffName){
+    public void getPrediction(Context context, String arffName, int k){
         Instances instances = null;
 
         try {
@@ -47,28 +47,63 @@ public class ExercisePrediction {
 
         int s=0;
         int f=0;
+
+        int tempInstanceCount = 0;
+        Map<Double,Double> tempList = new HashMap<>();
+        tempList.put(0.0,0.0);
+        tempList.put(1.0,0.0);
+        tempList.put(2.0,0.0);
+
         for (int i=0; i<instances.size();i++){
             instances.setClassIndex(3);
+            double[] destributionValue = null;
+
             double value = 0.0;
             try {
-                cls.classifyInstance(instances.instance(i));
-
+                destributionValue = cls.distributionForInstance(instances.get(i));
                 value = cls.classifyInstance(instances.instance(i));
             }catch(Exception e){
                 e.printStackTrace();
             }
 
+            //prediction based on 3 points - only for testing ----------------
+            if(tempInstanceCount < 4){
+                tempInstanceCount++;
+            }else{
+                tempInstanceCount = 0;
+                double predictionValue = 0.0;
+
+                double maxValueInMap=(Collections.max(tempList.values()));
+                for (Map.Entry<Double, Double> entry : tempList.entrySet()) {  // Itrate through hashmap
+                    if (entry.getValue()==maxValueInMap) {
+                        predictionValue = entry.getKey();     // Print the key with max value
+                    }
+                }
+//                System.out.println(tempList.toString());
+                System.out.println("Improved prediction: "+instances.classAttribute().value((int) predictionValue));
+
+                tempList.put(0.0, 0.0);
+                tempList.put(1.0, 0.0);
+                tempList.put(2.0, 0.0);
+            }
+
+                tempList.put(0.0,tempList.get(0.0)+ destributionValue[0]);
+                tempList.put(1.0,tempList.get(1.0)+ destributionValue[1]);
+                tempList.put(2.0,tempList.get(2.0)+ destributionValue[2]);
+
+            //-------------------------------------------------------------
+
             String prediction = instances.classAttribute().value((int) value);
 
             if(instances.get(i).toString(3).equals(prediction) ){
                 s++;
-                System.out.println("TRUE ------ real: "+ instances.get(i).toString(3)+ "   prediction: "+prediction);
+//                System.out.println("TRUE ------ real: "+ instances.get(i).toString(3)+ "   prediction: "+prediction);
             }else if(instances.get(i).toString(3).equals("'"+prediction+"'") ){
                 s++;
-                System.out.println("True ------ real: "+ instances.get(i).toString(3)+ "   prediction: "+prediction);
+//                System.out.println("True ------ real: "+ instances.get(i).toString(3)+ "   prediction: "+prediction);
             }else {//!originalTrain.get(i).toString(3).equals("Push-ups")) {
                 f++;
-                System.out.println("FALSE ------ real: " + instances.get(i).toString(3) + "   prediction: " + prediction);
+//                System.out.println("FALSE ------ real: " + instances.get(i).toString(3) + "   prediction: " + prediction);
             }
         }
 
