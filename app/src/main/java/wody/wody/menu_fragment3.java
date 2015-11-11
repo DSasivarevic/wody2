@@ -45,7 +45,7 @@ public class menu_fragment3 extends Fragment implements SensorEventListener,
     private View mChart;
     private TextView count;
     private NumberPicker picker;
-    private float ALPHA = 0.50f;
+    private float ALPHA = 0.80f;
     private float[] filterarray;
 
 
@@ -70,7 +70,6 @@ public class menu_fragment3 extends Fragment implements SensorEventListener,
         btnStop.setEnabled(false);
 
 
-
         return rootview;
     }
 
@@ -86,7 +85,7 @@ public class menu_fragment3 extends Fragment implements SensorEventListener,
                 Sensor accel = sensorManager
                         .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
                 sensorManager.registerListener(this, accel,
-                        SensorManager.SENSOR_DELAY_FASTEST);
+                        SensorManager.SENSOR_DELAY_NORMAL);
                 break;
             case R.id.btnStop:
                 btnStart.setEnabled(true);
@@ -110,9 +109,14 @@ public class menu_fragment3 extends Fragment implements SensorEventListener,
     public void onSensorChanged(SensorEvent event) {
         if (started) {
             filterarray = lowPass(event.values.clone(), filterarray);
+
             double x = filterarray[0];
             double y = filterarray[1];
             double z = filterarray[2];
+
+            // alpha is calculated as t / (t + dT)
+            // with t, the low-pass filter's time-constant
+            // and dT, the event delivery rate
 
             long timestamp = System.currentTimeMillis();
             AccelData data = new AccelData(timestamp, x, y, z);

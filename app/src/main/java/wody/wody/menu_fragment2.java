@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.Arrays;
-
 import controllers.Server;
 import models.SensorData;
 import models.TimeExercise;
@@ -45,7 +43,7 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
         mSensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
         acSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        mSensorManager.registerListener(this, acSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, acSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         final Button btn = (Button) rootview.findViewById(R.id.btnStart);
         final Button btn2 = (Button) rootview.findViewById(R.id.button2);
@@ -106,13 +104,13 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent evt) {
-        Log.e("Testing", Arrays.toString(evt.values));
+        //Log.e("Testing", Arrays.toString(evt.values));
 
         //x = evt.values[0], y = evt.values[1], z = evt.values[2], timestamp = evt.timestamp
         if(wod.getCurrentExercise() < wod.getExercises().size()){
             TimeExercise ex = (TimeExercise)wod.getExercises().get(wod.getCurrentExercise());
             SensorData s = new SensorData(evt.values, evt.timestamp);
-            //Log.e("Testing", s.getData().toString());
+            Log.e("Testing", s.getData().toString());
             ex.addData(s);
         }
 
