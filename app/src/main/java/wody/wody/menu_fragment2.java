@@ -2,6 +2,7 @@ package wody.wody;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -22,8 +23,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.io.File;
+
+import controllers.Globals;
+import controllers.SensorsService;
 import controllers.Server;
-import models.SensorData;
 import models.TimeExercise;
 import models.WOD;
 
@@ -35,6 +39,12 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
 
     private SensorManager mSensorManager;
     private Sensor acSensor;
+    private RadioGroup radioGroup;
+    private final RadioButton[] radioBtns = new RadioButton[4];
+    private Intent mServiceIntent;
+    private File mFeatureFile;
+
+    private Button btnDelete;
 
     private WOD wod;
 
@@ -49,6 +59,8 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
         acSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         mSensorManager.registerListener(this, acSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mServiceIntent = new Intent(getActivity(), SensorsService.class);
+
 
         final Button btn = (Button) rootview.findViewById(R.id.btnStart);
         final Button btn2 = (Button) rootview.findViewById(R.id.button2);
@@ -70,13 +82,21 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
                 } else {
 
                     int next = wod.nextExercise();
-//                    Log.e("ERROR", "" + next);
+                   Log.e("ERROR", "" + next);
                     if (next < wod.getExercises().size()) {
-//                        Log.e("ERROR", "" + wod.getExercises().size());
+                        Log.e("ERROR", "" + wod.getExercises().size());
                         TimeExercise old_ex = (TimeExercise) wod.getExercises().get(next);
                         old_ex.stop();
                         TimeExercise ex = (TimeExercise) wod.getExercises().get(next);
                         btn.setText(ex.getRepetitions() + " " + ex.getName());
+
+                        Bundle extras = new Bundle();
+                        extras.putString(Globals.CLASS_LABEL_KEY, ex.getName());
+                        mServiceIntent.putExtras(extras);
+                        getContext().startService(mServiceIntent);
+                        Log.e("ERROR", "StartActivity" + wod.getExercises().size());
+
+
                         ex.start();
                     } else {
                         TimeExercise old_ex = (TimeExercise) wod.getExercises().get(wod.getExercises().size() - 1);
@@ -109,23 +129,24 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
         String text = checkedRadioButton.getText().toString();
 
         wod = new WOD("","",1);
-//        wod.addExercise(new TimeExercise(text, 10));
-//        wod.addExercise(new TimeExercise("Sit-ups", 10));
-//        wod.addExercise(new TimeExercise("Air Squat", 10));
+        wod.addExercise(new TimeExercise(text, 10));
+        //wod.addExercise(new TimeExercise("Sit-ups", 10));
+        //wod.addExercise(new TimeExercise("Air Squat", 10));
         //wod.addExercise(new TimeExercise("Sit-ups", 10));
         return rootview;
     }
 
     @Override
-    public void onSensorChanged(SensorEvent evt) {
+    public void onSensorChanged(SensorEvent event) {
 
-        //x = evt.values[0], y = evt.values[1], z = evt.values[2], timestamp = evt.timestamp
+       /* //x = evt.values[0], y = evt.values[1], z = evt.values[2], timestamp = evt.timestamp
         if(wod.getCurrentExercise() < wod.getExercises().size()){
             TimeExercise ex = (TimeExercise)wod.getExercises().get(wod.getCurrentExercise());
             SensorData s = new SensorData(evt.values, evt.timestamp);
             Log.e("Testing", s.getData().toString());
             ex.addData(s);
-        }
+        }*/
+
 
         //Log.d(""+Log.VERBOSE,""+evt.values[0]);
     }

@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import controllers.CollectorActivity;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity
             return true;
         } else if (id == R.id.nav_gallery) {
             Toast.makeText(getApplicationContext(), "2", Toast.LENGTH_LONG).show();
-            menu_fragment2 mainfragment = new menu_fragment2();
+            CollectorActivity mainfragment = new CollectorActivity();
             android.support.v4.app.FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
             fm.replace(R.id.frame, mainfragment);
             fm.commit();
