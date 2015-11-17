@@ -1,8 +1,8 @@
 package models;
 
 import android.content.Context;
+import android.util.Log;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +38,8 @@ public class ExercisePrediction {
         Instances instances = null;
 
         try {
-            InputStream arffFile = context.getAssets().open(arffName);
+            InputStream arffFile = context.openFileInput("files/"+arffName); //context.getAssets().open(arffName);
+            Log.e("TESTING", arffName.toString());
             ConverterUtils.DataSource source = new ConverterUtils.DataSource(arffFile);
             instances = source.getDataSet();
         } catch (Exception e) {

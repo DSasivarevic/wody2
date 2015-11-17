@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import models.ExercisePrediction;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -299,9 +300,11 @@ public class SensorsService extends Service implements SensorEventListener {
 				saver.setFile(mFeatureFile);
 				// Write into the file
 				saver.writeBatch();
-				Log.i("batch","write batch here");
+				Log.i("batch", "write batch here");
 				Toast.makeText(getApplicationContext(), toastDisp,
 						Toast.LENGTH_SHORT).show();
+				ExercisePrediction ex = new ExercisePrediction(getApplicationContext(),"model_8000.model");
+				ex.getPrediction(getApplicationContext(),"features.arff",1);
 			} catch (IOException e) {
 				toastDisp = getString(R.string.ui_sensor_service_toast_error_file_saving_failed);
 				e.printStackTrace();
