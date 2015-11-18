@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,10 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
 
+import models.ExercisePrediction;
 import models.TimeExercise;
 import models.WOD;
 import wody.wody.R;
@@ -25,17 +29,20 @@ public class CollectorActivity extends Fragment {
 
 	private enum State {
 		IDLE, COLLECTING, TRAINING, CLASSIFYING
-	};
+	}
 
-	private final String[] mLabels = { Globals.CLASS_LABEL_STANDING,
+	;
+
+	private final String[] mLabels = {Globals.CLASS_LABEL_STANDING,
 			Globals.CLASS_LABEL_WALKING, Globals.CLASS_LABEL_RUNNING,
-			Globals.CLASS_LABEL_OTHER };
+			Globals.CLASS_LABEL_OTHER};
 
 	private RadioGroup radioGroup;
 	private final RadioButton[] radioBtns = new RadioButton[4];
 	private Intent mServiceIntent;
 	private File mFeatureFile;
 
+	private TextView txtPrediction;
 	private State mState;
 	private Button btnDelete;
 	private Button btnCollect;
@@ -45,7 +52,8 @@ public class CollectorActivity extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		rootview = inflater.inflate(R.layout.main, container, false);		super.onCreate(savedInstanceState);
+		rootview = inflater.inflate(R.layout.main, container, false);
+		super.onCreate(savedInstanceState);
 		radioGroup = (RadioGroup) rootview.findViewById(R.id.radioGroupLabels);
 		radioBtns[0] = (RadioButton) rootview.findViewById(R.id.radioStanding);
 		radioBtns[1] = (RadioButton) rootview.findViewById(R.id.radioWalking);
@@ -60,13 +68,14 @@ public class CollectorActivity extends Fragment {
 				Globals.FEATURE_FILE_NAME);
 		mServiceIntent = new Intent(getActivity(), SensorsService.class);
 
+		txtPrediction = (TextView) rootview.findViewById(R.id.txtPrediction);
 		final Button btn = (Button) rootview.findViewById(R.id.btnStart);
 		final Button btn2 = (Button) rootview.findViewById(R.id.button2);
 		int checkedId = radioGroup.getCheckedRadioButtonId();
 		RadioButton checkedRadioButton = (RadioButton) rootview.findViewById(checkedId);
 		String text = checkedRadioButton.getText().toString();
 
-		wod = new WOD("","",1);
+		wod = new WOD("", "", 1);
 		wod.addExercise(new TimeExercise(text, 10));
 		//btn2.setVisibility(View.GONE);
 		btnCollect.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +125,20 @@ public class CollectorActivity extends Fragment {
 						getActivity().stopService(mServiceIntent);
 						((NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE)).cancelAll();
 						btnCollect.setBackgroundColor(Color.GRAY);
+
+						final Handler handler = new Handler();
+						handler.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								ExercisePrediction ex = new ExercisePrediction(getContext(), "disp_model.model");
+								ArrayList<String> torben = ex.getPrediction(getContext(), "/storage/emulated/0/Android/data/wody.wody/files/features.arff", 3);
+
+								txtPrediction.setText("Predictions");
+								for (String prediction : torben) {
+									txtPrediction.append("    "+prediction+"\n");
+								}
+							}
+						}, 1000);
 
 					}
 
@@ -223,5 +246,16 @@ public class CollectorActivity extends Fragment {
 		getActivity().finish();
 		super.onDestroy();
 	}
+
+//	public void setPath(String path){
+//		ExercisePrediction ex = new ExercisePrediction(getContext(), "disp_model.model");
+//		ArrayList<String> torben = ex.getPrediction(getContext(), path, 3);
+//
+//		txtPrediction.setText("torben er noob");
+//		for(String prediction : torben){
+//			txtPrediction.append("ssss"+prediction);
+//		}
+
+//}
 
 }

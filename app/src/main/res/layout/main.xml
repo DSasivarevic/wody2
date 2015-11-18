@@ -60,11 +60,17 @@
         android:onClick="onDeleteDataClicked"
         android:text="@string/ui_collector_button_delete_title" />
 
-    <TextView
-        android:layout_width="392dp"
+    <ScrollView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="txtPrediction"
-        android:id="@+id/textView2"
-        android:layout_weight="0.66" />
+        android:id="@+id/scrollView" >
+
+        <TextView
+            android:layout_width="392dp"
+            android:layout_height="wrap_content"
+            android:text="txtPrediction"
+            android:id="@+id/txtPrediction"
+            android:layout_weight="0.66" />
+    </ScrollView>
 
 </LinearLayout>

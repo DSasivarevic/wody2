@@ -54,7 +54,6 @@ public class SensorsService extends Service implements SensorEventListener {
 	private Instances mDataset;
 	private Attribute mClassAttribute;
 	private OnSensorChangedTask mAsyncTask;
-	private TextView txtPrediction;
 
 	private static ArrayBlockingQueue<Double> mAccBuffer;
 	public static final DecimalFormat mdf = new DecimalFormat("#.##");
@@ -300,16 +299,15 @@ public class SensorsService extends Service implements SensorEventListener {
 				mFeatureFile = new File(getExternalFilesDir(null),
 				 "features.arff");
 				Log.e("TESTING", mFeatureFile.getPath().toString());
-				Log.e("TESTING",mFeatureFile.toString());  
+				Log.e("TESTING", mFeatureFile.toString());
 				saver.setFile(mFeatureFile);
 				// Write into the file
 				saver.writeBatch();
 				Log.i("batch", "write batch here");
 				Toast.makeText(getApplicationContext(), toastDisp,
 						Toast.LENGTH_SHORT).show();
-				ExercisePrediction ex = new ExercisePrediction(getApplicationContext(), "disp_model.model");
-				ArrayList<String> torben = ex.getPrediction(getApplicationContext(), mFeatureFile.getPath(), 3);
-
+//				ExercisePrediction ex = new ExercisePrediction(getApplicationContext(), "disp_model.model");
+//				ArrayList<String> torben = ex.getPrediction(getApplicationContext(), mFeatureFile.getPath(), 3);
 			} catch (IOException e) {
 				toastDisp = getString(R.string.ui_sensor_service_toast_error_file_saving_failed);
 				e.printStackTrace();
