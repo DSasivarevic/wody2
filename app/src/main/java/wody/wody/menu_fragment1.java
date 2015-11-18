@@ -4,6 +4,7 @@ package wody.wody;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,35 @@ public class menu_fragment1 extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootview = inflater.inflate(R.layout.menu1_layout, container, false);
+        rootview = inflater.inflate(R.layout.main2, container, false);
+
+        final RoundButton btnStartStop = (RoundButton) rootview.findViewById(R.id.btnStartStop);
+
+        btnStartStop.setOnClickListener(new View.OnClickListener() {
+            int click = 0;
+            @Override
+            public void onClick(View v) {
+                btnStartStop.setRoundColor(0xFFF0F0FF);
+                btnStartStop.refreshDrawableState();
+
+                if(click %2 == 0){
+                    //Change to red color
+                    btnStartStop.setText("Stop");
+                    btnStartStop.setRoundColor(0xFFFF0000);
+                }
+                else if(click % 2 == 1){
+                    //Change to green color
+                    btnStartStop.setText("Start");
+                    btnStartStop.setRoundColor(0xFF64DD17);
+                    //TODO: End Wod and end summary
+                }
+                btnStartStop.invalidate();
+                click++;
+            }
+        });
+
+
+        /*
         final TextView textView = (TextView) rootview.findViewById(R.id.screen);
         Context context = getActivity().getApplicationContext();
 
@@ -60,6 +89,8 @@ public class menu_fragment1 extends Fragment {
                 }
             }
         });
+
+        */
 
         return rootview;
 
