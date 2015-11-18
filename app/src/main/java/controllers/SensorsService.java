@@ -300,7 +300,7 @@ public class SensorsService extends Service implements SensorEventListener {
 				mFeatureFile = new File(getExternalFilesDir(null),
 				 "features.arff");
 				Log.e("TESTING", mFeatureFile.getPath().toString());
-				Log.e("TESTING",mFeatureFile.toString());  
+				Log.e("TESTING",mFeatureFile.toString());
 				saver.setFile(mFeatureFile);
 				// Write into the file
 				saver.writeBatch();
