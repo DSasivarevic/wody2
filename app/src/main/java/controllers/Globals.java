@@ -34,7 +34,7 @@ public abstract class Globals {
 	public static final String CLASS_LABEL_STANDING = "Jump up";
 	public static final String CLASS_LABEL_WALKING = "Frontal elevation of arms";
 	public static final String CLASS_LABEL_RUNNING = "Knees bending (crouching)";
-	public static final String CLASS_LABEL_OTHER = "others";
+	public static final String CLASS_LABEL_OTHER = "Other";
 	
 	public static final String FEAT_FFT_COEF_LABEL = "fft_coef_";
 	public static final String FEAT_MAX_LABEL = "max";

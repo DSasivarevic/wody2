@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,12 +40,13 @@ public class ExercisePrediction {
     public void getPrediction(Context context, String arffName, int k){
         Instances instances = null;
         try {
-            FileInputStream arffFile = new FileInputStream(new File(arffName));
+//            FileInputStream arffFile = new FileInputStream(new File(arffName));
 //            InputStream arffFile = context.openFileInput(arffName); //context.getAssets().open(arffName);
-//            InputStream arffFile = context.getAssets().open(arffName);
+            InputStream arffFile = context.getAssets().open("features.arff");
+            Log.e("TESTING",arffFile.toString());
             ConverterUtils.DataSource source = new ConverterUtils.DataSource(arffFile);
             instances = source.getDataSet();
-            System.out.println(instances.toString());
+//            System.out.println(instances.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,18 +60,22 @@ public class ExercisePrediction {
 //        tempList.put(1.0,0.0);
 //        tempList.put(2.0,0.0);
         instances.setClassIndex(67);
+//        Log.e("TESTING", "" + instances.classAttribute().enumerateValues());
+//        instances.classAttribute().numValues();
+
 
         for (int i=0; i<instances.size();i++){
 //            double[] destributionValue = null;
-
+            instances.instance(i).setClassMissing();
             double value = 0.0;
             try {
 //                destributionValue = cls.distributionForInstance(instances.get(i));
+                String tmp = "";
                 value = cls.classifyInstance(instances.instance(i));
+
             }catch(Exception e){
                 e.printStackTrace();
             }
-            Log.e("TESTING",""+instances.instance(i));
 
 //            //prediction based on 3 points - only for testing ----------------
 //            if(tempInstanceCount < 4){

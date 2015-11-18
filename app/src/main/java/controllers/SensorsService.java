@@ -305,7 +305,7 @@ public class SensorsService extends Service implements SensorEventListener {
 				Log.i("batch", "write batch here");
 				Toast.makeText(getApplicationContext(), toastDisp,
 						Toast.LENGTH_SHORT).show();
-				ExercisePrediction ex = new ExercisePrediction(getApplicationContext(), "preciseModel3_7_3.model");
+				ExercisePrediction ex = new ExercisePrediction(getApplicationContext(), "dispModel3_7_3.model");
 				ex.getPrediction(getApplicationContext(), mFeatureFile.getPath(), 3);
 			} catch (IOException e) {
 				toastDisp = getString(R.string.ui_sensor_service_toast_error_file_saving_failed);
