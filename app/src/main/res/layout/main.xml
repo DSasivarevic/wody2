@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <RadioGroup
         android:id="@+id/radioGroupLabels"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp" >
+        android:layout_marginTop="50dp" >
 
         <RadioButton
             android:id="@+id/radioStanding"
@@ -58,5 +59,12 @@
         android:layout_gravity="center"
         android:onClick="onDeleteDataClicked"
         android:text="@string/ui_collector_button_delete_title" />
+
+    <TextView
+        android:layout_width="392dp"
+        android:layout_height="wrap_content"
+        android:text="txtPrediction"
+        android:id="@+id/textView2"
+        android:layout_weight="0.66" />
 
 </LinearLayout>

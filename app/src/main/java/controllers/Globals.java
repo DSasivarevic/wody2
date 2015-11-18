@@ -30,13 +30,13 @@ public abstract class Globals {
 	
 	public static final String ACTION_MOTION_UPDATED = "MYRUNS_MOTION_UPDATED";
 	
-	public static final String CLASS_LABEL_KEY = "label";	
-	public static final String CLASS_LABEL_STANDING = "Jump up";
-	public static final String CLASS_LABEL_WALKING = "Frontal elevation of arms";
-	public static final String CLASS_LABEL_RUNNING = "Knees bending (crouching)";
-	public static final String CLASS_LABEL_OTHER = "others";
+	public static final String CLASS_LABEL_KEY = "ex";
+	public static final String CLASS_LABEL_STANDING = "Jump_up";
+	public static final String CLASS_LABEL_WALKING = "Frontal_elevation_of_arms";
+	public static final String CLASS_LABEL_RUNNING = "Knees_bending_(crouching)";
+	public static final String CLASS_LABEL_OTHER = "Other";
 	
-	public static final String FEAT_FFT_COEF_LABEL = "fft_coef_";
+	public static final String FEAT_FFT_COEF_LABEL = "m";
 	public static final String FEAT_MAX_LABEL = "max";
 	public static final String FEAT_MIN_LABEL = "min";
 	public static final String FEAT_MEAN_LABEL = "mean";
