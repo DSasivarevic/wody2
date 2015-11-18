@@ -23,7 +23,7 @@ public abstract class Globals {
 	public static final int ACTIVITY_ID_STANDING = 0;
 	public static final int ACTIVITY_ID_WALKING = 1;
 	public static final int ACTIVITY_ID_RUNNING = 2;
-	public static final int ACTIVITY_ID_OTHER = 2;
+	public static final int ACTIVITY_ID_OTHER = 3;
 	
 	public static final int SERVICE_TASK_TYPE_COLLECT = 0;
 	public static final int SERVICE_TASK_TYPE_CLASSIFY = 1;

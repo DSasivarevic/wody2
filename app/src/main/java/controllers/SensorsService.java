@@ -112,7 +112,7 @@ public class SensorsService extends Service implements SensorEventListener {
 
 		// Set the last column/attribute (standing/walking/running) as the class
 		// index for classification
-		mDataset.setClassIndex(mDataset.numAttributes() - 1);
+		mDataset.setClassIndex(67);
 
 		Intent i = new Intent(this, CollectorActivity.class);
 		// Read:
