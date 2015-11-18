@@ -98,7 +98,7 @@ public class SensorsService extends Service implements SensorEventListener {
 		allAttr.add(new Attribute(Globals.FEAT_MEAN_LABEL));
 
 		// Declare a nominal attribute along with its candidate values
-		ArrayList<String> labelItems = new ArrayList<String>(3);
+		ArrayList<String> labelItems = new ArrayList<String>();
 		labelItems.add(Globals.CLASS_LABEL_STANDING);
 		labelItems.add(Globals.CLASS_LABEL_WALKING);
 		labelItems.add(Globals.CLASS_LABEL_RUNNING);
@@ -136,8 +136,7 @@ public class SensorsService extends Service implements SensorEventListener {
 				| Notification.FLAG_ONGOING_EVENT;
 		notificationManager.notify(0, notification);
 
-		getData();
-		Log.e("ERROR", "SensorService");
+//		getData();
 		mAsyncTask = new OnSensorChangedTask();
 		mAsyncTask.execute();
 
@@ -208,9 +207,9 @@ public class SensorsService extends Service implements SensorEventListener {
 							}
 						}
 						mean = total/accBlock.length;
-						Log.e("testing", "Max: "+max);
-						Log.e("testing", "Min: "+min);
-						Log.e("testing", "Mean: "+mean);
+//						Log.e("testing", "Max: "+max);
+//						Log.e("testing", "Min: "+min);
+//						Log.e("testing", "Mean: "+mean);
 
 
 						fft.fft(re, im);
@@ -247,7 +246,7 @@ public class SensorsService extends Service implements SensorEventListener {
 				super.onCancelled();
 				return;
 			}
-			Log.i("in the loop","still in the loop cancelled");
+			Log.i("in the loop", "still in the loop cancelled");
 			String toastDisp;
 
 			if (mFeatureFile.exists()) {
@@ -291,20 +290,23 @@ public class SensorsService extends Service implements SensorEventListener {
 			// create new Arff file
 			ArffSaver saver = new ArffSaver();
 			// Set the data source of the file content
+//			Log.e("TESTING",mDataset.toString());
 			saver.setInstances(mDataset);
-			Log.e("1234", mDataset.size()+"");
+//			Log.e("1234", mDataset.size()+"");
 			try {
 				// Set the destination of the file.
 				mFeatureFile = new File(getExternalFilesDir(null),
 				 "features.arff");
+				Log.e("TESTING", mFeatureFile.getPath().toString());
+				Log.e("TESTING",mFeatureFile.toString());
 				saver.setFile(mFeatureFile);
 				// Write into the file
 				saver.writeBatch();
 				Log.i("batch", "write batch here");
 				Toast.makeText(getApplicationContext(), toastDisp,
 						Toast.LENGTH_SHORT).show();
-				ExercisePrediction ex = new ExercisePrediction(getApplicationContext(),"model_8000.model");
-				ex.getPrediction(getApplicationContext(),"features.arff",1);
+				ExercisePrediction ex = new ExercisePrediction(getApplicationContext(), "preciseModel3_7_3.model");
+				ex.getPrediction(getApplicationContext(), mFeatureFile.getPath(), 3);
 			} catch (IOException e) {
 				toastDisp = getString(R.string.ui_sensor_service_toast_error_file_saving_failed);
 				e.printStackTrace();

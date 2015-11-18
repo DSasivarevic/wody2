@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
+import models.ExercisePrediction;
 import models.TimeExercise;
 import models.WOD;
 import wody.wody.R;
@@ -116,6 +118,7 @@ public class CollectorActivity extends Fragment {
 						getActivity().stopService(mServiceIntent);
 						((NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE)).cancelAll();
 						btnCollect.setBackgroundColor(Color.GRAY);
+
 					}
 
 				}

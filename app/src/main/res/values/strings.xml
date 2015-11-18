@@ -5,10 +5,10 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="ui_collector_radio_standing_title">Standing</string>
-    <string name="ui_collector_radio_walking_title">Walking</string>
-    <string name="ui_collector_radio_running_title">Running</string>
-    <string name="ui_collector_radio_other_title">Others</string>
+    <string name="ui_collector_radio_standing_title">Jump up</string>
+    <string name="ui_collector_radio_walking_title">Frontal elevation of arms</string>
+    <string name="ui_collector_radio_running_title">Knees bending (crouching)</string>
+    <string name="ui_collector_radio_other_title">others</string>
     <string name="ui_collector_button_start_title">Start collecting</string>
     <string name="ui_collector_button_stop_title">Stop collecting</string>
     <string name="ui_collector_button_delete_title">Delete Data</string>
