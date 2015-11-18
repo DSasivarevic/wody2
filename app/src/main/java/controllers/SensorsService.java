@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -53,6 +54,7 @@ public class SensorsService extends Service implements SensorEventListener {
 	private Instances mDataset;
 	private Attribute mClassAttribute;
 	private OnSensorChangedTask mAsyncTask;
+	private TextView txtPrediction;
 
 	private static ArrayBlockingQueue<Double> mAccBuffer;
 	public static final DecimalFormat mdf = new DecimalFormat("#.##");
@@ -89,8 +91,8 @@ public class SensorsService extends Service implements SensorEventListener {
 		// Adding FFT coefficient attributes
 		DecimalFormat df = new DecimalFormat("0000");
 
-		for (int i = 0; i < Globals.ACCELEROMETER_BLOCK_CAPACITY; i++) {
-			allAttr.add(new Attribute(Globals.FEAT_FFT_COEF_LABEL + df.format(i)));
+		for (int i = 1; i <= Globals.ACCELEROMETER_BLOCK_CAPACITY; i++) {
+			allAttr.add(new Attribute(Globals.FEAT_FFT_COEF_LABEL + i));
 		}
 		// Adding the max feature
 		allAttr.add(new Attribute(Globals.FEAT_MAX_LABEL));
@@ -112,7 +114,7 @@ public class SensorsService extends Service implements SensorEventListener {
 
 		// Set the last column/attribute (standing/walking/running) as the class
 		// index for classification
-		mDataset.setClassIndex(mDataset.numAttributes() - 1);
+		mDataset.setClassIndex(67);
 
 		Intent i = new Intent(this, CollectorActivity.class);
 		// Read:
@@ -298,15 +300,16 @@ public class SensorsService extends Service implements SensorEventListener {
 				mFeatureFile = new File(getExternalFilesDir(null),
 				 "features.arff");
 				Log.e("TESTING", mFeatureFile.getPath().toString());
-				Log.e("TESTING",mFeatureFile.toString());
+				Log.e("TESTING",mFeatureFile.toString());  
 				saver.setFile(mFeatureFile);
 				// Write into the file
 				saver.writeBatch();
 				Log.i("batch", "write batch here");
 				Toast.makeText(getApplicationContext(), toastDisp,
 						Toast.LENGTH_SHORT).show();
-				ExercisePrediction ex = new ExercisePrediction(getApplicationContext(), "dispModel3_7_3.model");
-				ex.getPrediction(getApplicationContext(), mFeatureFile.getPath(), 3);
+				ExercisePrediction ex = new ExercisePrediction(getApplicationContext(), "disp_model.model");
+				ArrayList<String> torben = ex.getPrediction(getApplicationContext(), mFeatureFile.getPath(), 3);
+
 			} catch (IOException e) {
 				toastDisp = getString(R.string.ui_sensor_service_toast_error_file_saving_failed);
 				e.printStackTrace();

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import models.ExercisePrediction;
 import models.TimeExercise;
 import models.WOD;
 import wody.wody.R;
@@ -121,6 +119,23 @@ public class CollectorActivity extends Fragment {
 
 					}
 
+				}
+
+			}
+		});
+
+		btnDelete.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (Environment.MEDIA_MOUNTED.equals(Environment
+						.getExternalStorageState())) {
+					if (mFeatureFile.exists()) {
+						mFeatureFile.delete();
+					}
+
+					Toast.makeText(getActivity().getApplicationContext(),
+							R.string.ui_collector_toast_file_deleted,
+							Toast.LENGTH_SHORT).show();
 				}
 
 			}

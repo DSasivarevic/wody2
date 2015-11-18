@@ -2,13 +2,12 @@ package models;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,8 +24,10 @@ import weka.core.converters.ConverterUtils;
 public class ExercisePrediction {
     private Classifier cls = null;
     private Instances instance = null;
+    private TextView txtPrediction;
 
     public ExercisePrediction(Context context, String modelName) {
+
         //ceate classifier
         try {
             InputStream wodModel = context.getAssets().open(modelName);
@@ -37,12 +38,13 @@ public class ExercisePrediction {
     }
 
     //get prediction from arff
-    public void getPrediction(Context context, String arffName, int k){
+    public ArrayList<String> getPrediction(Context context, String arffName, int k){
         Instances instances = null;
+        ArrayList<String> predictionArray = new ArrayList<String>();
         try {
-//            FileInputStream arffFile = new FileInputStream(new File(arffName));
-//            InputStream arffFile = context.openFileInput(arffName); //context.getAssets().open(arffName);
-            InputStream arffFile = context.getAssets().open("features.arff");
+            FileInputStream arffFile = new FileInputStream(new File(arffName));
+            //InputStream arffFile = context.openFileInput(arffName); //context.getAssets().open(arffName);
+            //InputStream arffFile = context.getAssets().open("features.arff");
             Log.e("TESTING",arffFile.toString());
             ConverterUtils.DataSource source = new ConverterUtils.DataSource(arffFile);
             instances = source.getDataSet();
@@ -105,6 +107,7 @@ public class ExercisePrediction {
 //            //-------------------------------------------------------------
 
             String prediction = instances.classAttribute().value((int) value);
+            predictionArray.add(prediction);
 
             if(instances.get(i).toString(3).equals(prediction) ){
                 s++;
@@ -120,6 +123,8 @@ public class ExercisePrediction {
 
         System.out.println("true: "+s);
         System.out.println("false: " + f);
+
+        return predictionArray;
     }
 
     //get prediction from instance
