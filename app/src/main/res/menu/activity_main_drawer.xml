@@ -8,6 +8,8 @@
             android:title="Page 2" />
         <item android:id="@+id/nav_slideshow"
             android:title="Page 3" />
+        <item android:id="@+id/wod_summary"
+            android:title="Page 4" />
     </group>
 
 

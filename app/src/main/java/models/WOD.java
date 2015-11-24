@@ -1,5 +1,6 @@
 package models;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -12,10 +13,12 @@ public class WOD {
     private String description;
     private int rounds;
     private Date date;
+    private String sDate;
     private boolean isBenchmark;
     private long startTime;
     private long endTime;
     private CopyOnWriteArrayList<BaseExercise> exercises = new CopyOnWriteArrayList<BaseExercise>();
+    private ArrayList<TimeExercise> timeExercises = new ArrayList<>();
     private ArrayList<String> notes = new ArrayList<String>();
     private int currentExercise = 0;
 
@@ -57,6 +60,9 @@ public class WOD {
         getExercises().add(ex);
     }
 
+    public void addTimeExercise(TimeExercise ex){
+        timeExercises.add(ex);
+    }
 
     public String getName() {
         return name;
@@ -118,6 +124,10 @@ public class WOD {
         return exercises;
     }
 
+    public ArrayList<TimeExercise> getTimeExercises(){
+        return timeExercises;
+    }
+
     public void setExercises(CopyOnWriteArrayList<BaseExercise> exercises) {
         this.exercises = exercises;
     }
@@ -133,5 +143,13 @@ public class WOD {
     @Override
     public String toString() {
         return "{name: " + name + "}";
+    }
+
+    public String getsDate() {
+        return sDate;
+    }
+
+    public void setsDate(String sDate) {
+        this.sDate = sDate;
     }
 }
