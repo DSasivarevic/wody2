@@ -4,13 +4,21 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import controllers.Globals;
 import weka.classifiers.Classifier;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -41,6 +49,46 @@ public class ExercisePrediction {
     public ArrayList<String> getPrediction(Context context, String arffName, int k){
         Instances instances = null;
         ArrayList<String> predictionArray = new ArrayList<String>();
+
+//        String ss="";
+//        String fileName = "predictions.txt";
+//        try {
+//            FileOutputStream fileos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+//            FileInputStream fileis = context.openFileInput(fileName);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//
+//        try {
+//            FileOutputStream fileout=context.openFileOutput(fileName, context.MODE_PRIVATE);
+//            OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
+//            outputWriter.write("test");
+//            outputWriter.close();
+//            Log.e("TESTING","test");
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            FileInputStream fileIn=context.openFileInput(fileName);
+//            InputStreamReader InputRead= new InputStreamReader(fileIn);
+//
+//            char[] inputBuffer= new char[4];
+//
+//            int charRead;
+//
+//            while ((charRead=InputRead.read(inputBuffer))>0) {
+//                // char to string conversion
+//                String readstring=String.copyValueOf(inputBuffer,0,charRead);
+//                ss +=readstring;
+//            }
+//            Log.e("Test inputStream", ss.toString());
+//            InputRead.close();}catch(Exception e){
+//
+//            e.printStackTrace();
+//        }
+
+
         try {
             FileInputStream arffFile = new FileInputStream(new File(arffName));
             //InputStream arffFile = context.openFileInput(arffName); //context.getAssets().open(arffName);

@@ -35,7 +35,6 @@ public class WOD {
     }
 
 
-
     public WOD(String name, String description, int rounds){
         this.name = name;
         this.description = description;
