@@ -17,14 +17,14 @@
             android:id="@+id/PushUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Jumps"
+            android:text="Push_ups"
             android:checked="true" />
 
         <RadioButton
             android:id="@+id/SitUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fron Latheral Raises" />
+            android:text="Sit-ups" />
 
         <RadioButton
             android:id="@+id/AirSquat"

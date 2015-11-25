@@ -28,6 +28,7 @@ import java.io.File;
 import controllers.Globals;
 import controllers.SensorsService;
 import controllers.Server;
+import models.SensorData;
 import models.TimeExercise;
 import models.WOD;
 
@@ -75,6 +76,11 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
                 btn.setBackgroundColor(Color.RED);
                 wod.setName(((TextView) rootview.findViewById(R.id.wodName)).getText().toString());
                 if (btn.getText().equals("Start")) {
+                    Log.e("TESTING","****************************************************************************\n" +
+                                    "****************************************************************************\n" +
+                                    "****************************************************************************\n");
+
+
                     wod.addExercise(new TimeExercise(text, 10));
                     TimeExercise ex = (TimeExercise) wod.getExercises().get(wod.getCurrentExercise());
                     ex.start();
@@ -93,7 +99,7 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
                         Bundle extras = new Bundle();
                         extras.putString(Globals.CLASS_LABEL_KEY, ex.getName());
                         mServiceIntent.putExtras(extras);
-                        getContext().startService(mServiceIntent);
+                        //getContext().startService(mServiceIntent);
                         Log.e("ERROR", "StartActivity" + wod.getExercises().size());
 
 
@@ -137,15 +143,16 @@ public class menu_fragment2 extends Fragment implements SensorEventListener {
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
+    public void onSensorChanged(SensorEvent evt) {
+        //Log.e("TESTING",evt.values[0]+","+evt.values[1] + ","+ evt.values[2]);
 
-       /* //x = evt.values[0], y = evt.values[1], z = evt.values[2], timestamp = evt.timestamp
+       //x = evt.values[0], y = evt.values[1], z = evt.values[2], timestamp = evt.timestamp
         if(wod.getCurrentExercise() < wod.getExercises().size()){
             TimeExercise ex = (TimeExercise)wod.getExercises().get(wod.getCurrentExercise());
             SensorData s = new SensorData(evt.values, evt.timestamp);
             Log.e("Testing", s.getData().toString());
             ex.addData(s);
-        }*/
+        }
 
 
         //Log.d(""+Log.VERBOSE,""+evt.values[0]);
