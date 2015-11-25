@@ -18,14 +18,17 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -55,6 +58,7 @@ public class SensorsService extends Service implements SensorEventListener {
 
 	private static ArrayBlockingQueue<Double> mAccBuffer;
 	public static final DecimalFormat mdf = new DecimalFormat("#.##");
+	private BufferedWriter out;
 
 	@Override
 	public void onCreate() {
@@ -66,6 +70,21 @@ public class SensorsService extends Service implements SensorEventListener {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+
+		try {
+			File root = Environment.getExternalStorageDirectory();
+			if (root.canWrite()){
+				File gpxfile = new File(root, "masterkevin.csv");
+				FileWriter gpxwriter = new FileWriter(gpxfile);
+				out = new BufferedWriter(gpxwriter);
+			}
+		} catch (IOException e) {
+			Log.e("TAG", "Could not write file " + e.getMessage());
+		}
+
+		catch(Exception ex){
+
+		}
 
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		mAccelerometer = mSensorManager
@@ -151,7 +170,7 @@ public class SensorsService extends Service implements SensorEventListener {
 			e.printStackTrace();
 		}
 		mSensorManager.unregisterListener(this);
-		Log.i("","");
+		Log.i("", "");
 		super.onDestroy();
 
 	}
@@ -239,8 +258,9 @@ public class SensorsService extends Service implements SensorEventListener {
 		@Override
 		protected void onCancelled() {
 			
-			Log.e("123", mDataset.size()+"");
-			
+			Log.e("123", mDataset.size() + "");
+			try{out.close();}catch (Exception e){}
+
 			if (mServiceTaskType == Globals.SERVICE_TASK_TYPE_CLASSIFY) {
 				super.onCancelled();
 				return;
@@ -411,6 +431,12 @@ public class SensorsService extends Service implements SensorEventListener {
 					+ event.values[1] * event.values[1] + event.values[2]
 					* event.values[2]);
 
+			try {
+				out.write("" + event.values[0] + "," + event.values[1] + "," + event.values[2] + "," + event.timestamp + "\n");
+				out.flush();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			// Inserts the specified element into this queue if it is possible
 			// to do so immediately without violating capacity restrictions,
 			// returning true upon success and throwing an IllegalStateException

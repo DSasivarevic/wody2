@@ -130,11 +130,11 @@ public class CollectorActivity extends Fragment {
 						handler.postDelayed(new Runnable() {
 							@Override
 							public void run() {
-<<<<<<< HEAD
-								ExercisePrediction ex = new ExercisePrediction(getContext(), "fft_all.model");
-=======
+
+								//ExercisePrediction ex = new ExercisePrediction(getContext(), "fft_all.model");
+
 								ExercisePrediction ex = new ExercisePrediction(getContext(), "fft_all2.model");
->>>>>>> 83dda3a313237d99fdcf6e2fe8912fa60fe59133
+
 								ArrayList<String> torben = ex.getPrediction(getContext(), "/storage/emulated/0/Android/data/wody.wody/files/features.arff", 3);
 
 								txtPrediction.setText("Predictions");
