@@ -92,6 +92,12 @@ public class MainActivity extends AppCompatActivity
             fm.replace(R.id.frame, mainfragment);
             fm.commit();
 
+        } else if (id == R.id.wod_summary) {
+            Toast.makeText(getApplicationContext(), "4", Toast.LENGTH_LONG).show();
+            wod_summary_fragment mainfragment = new wod_summary_fragment();
+            android.support.v4.app.FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
+            fm.replace(R.id.frame, mainfragment);
+            fm.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
