@@ -20,7 +20,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -33,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import models.ExercisePrediction;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -103,7 +101,7 @@ public class SensorsService extends Service implements SensorEventListener {
 		labelItems.add(Globals.CLASS_LABEL_STANDING);
 		labelItems.add(Globals.CLASS_LABEL_WALKING);
 		labelItems.add(Globals.CLASS_LABEL_RUNNING);
-		labelItems.add(Globals.CLASS_LABEL_OTHER);
+		//labelItems.add(Globals.CLASS_LABEL_OTHER);
 		mClassAttribute = new Attribute(Globals.CLASS_LABEL_KEY, labelItems);
 		allAttr.add(mClassAttribute);
 
@@ -298,12 +296,6 @@ public class SensorsService extends Service implements SensorEventListener {
 				// Set the destination of the file.
 				mFeatureFile = new File(getExternalFilesDir(null),
 				 "features.arff");
-				Log.e("TESTING", mFeatureFile.getPath().toString());
-<<<<<<< HEAD
-				Log.e("TESTING",mFeatureFile.toString());
-=======
-				Log.e("TESTING", mFeatureFile.toString());
->>>>>>> 0f03b1ef06f1c592ec4588419513929cf1121d59
 				saver.setFile(mFeatureFile);
 				// Write into the file
 				saver.writeBatch();

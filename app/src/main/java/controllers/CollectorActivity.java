@@ -57,8 +57,8 @@ public class CollectorActivity extends Fragment {
 		radioGroup = (RadioGroup) rootview.findViewById(R.id.radioGroupLabels);
 		radioBtns[0] = (RadioButton) rootview.findViewById(R.id.radioStanding);
 		radioBtns[1] = (RadioButton) rootview.findViewById(R.id.radioWalking);
-		radioBtns[2] = (RadioButton) rootview.findViewById(R.id.radioRunning);
-		radioBtns[3] = (RadioButton) rootview.findViewById(R.id.radioOther);
+		//radioBtns[2] = (RadioButton) rootview.findViewById(R.id.radioRunning);
+		//radioBtns[3] = (RadioButton) rootview.findViewById(R.id.radioOther);
 
 		btnDelete = (Button) rootview.findViewById(R.id.btnDeleteData);
 		btnCollect = (Button) rootview.findViewById(R.id.btnCollect);
@@ -130,7 +130,7 @@ public class CollectorActivity extends Fragment {
 						handler.postDelayed(new Runnable() {
 							@Override
 							public void run() {
-								ExercisePrediction ex = new ExercisePrediction(getContext(), "disp_model.model");
+								ExercisePrediction ex = new ExercisePrediction(getContext(), "fft_all.model");
 								ArrayList<String> torben = ex.getPrediction(getContext(), "/storage/emulated/0/Android/data/wody.wody/files/features.arff", 3);
 
 								txtPrediction.setText("Predictions");
