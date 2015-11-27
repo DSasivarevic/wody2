@@ -10,6 +10,7 @@ public class TimeExercise extends BaseExercise {
     private long endTime;
     ArrayList<SensorData> sensorData = new ArrayList<SensorData>();
     private int repetitions;
+    private long totalTime;
 
     public TimeExercise(String name, int repetitions){
         this.name = name;
@@ -58,5 +59,13 @@ public class TimeExercise extends BaseExercise {
 
     public int getRepetitions(){
         return repetitions;
+    }
+
+    public long getTotalTime() {
+        return totalTime;
+    }
+
+    public void setTotalTime(long totalTime) {
+        this.totalTime = totalTime;
     }
 }

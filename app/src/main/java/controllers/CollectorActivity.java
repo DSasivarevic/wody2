@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,7 @@ import models.ExercisePrediction;
 import models.TimeExercise;
 import models.WOD;
 import wody.wody.R;
+import wody.wody.wod_summary_fragment;
 
 public class CollectorActivity extends Fragment {
 
@@ -126,17 +129,47 @@ public class CollectorActivity extends Fragment {
 						((NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE)).cancelAll();
 						btnCollect.setBackgroundColor(Color.GRAY);
 
+						// Get exercise time from wod prediction
 						final Handler handler = new Handler();
 						handler.postDelayed(new Runnable() {
 							@Override
 							public void run() {
 								ExercisePrediction ex = new ExercisePrediction(getContext(), "fft_all2.model");
-								ArrayList<String> torben = ex.getPrediction(getContext(), "/storage/emulated/0/Android/data/wody.wody/files/features.arff", 3);
+								ArrayList<Long> torben = ex.getPrediction(getContext(), "/storage/emulated/0/Android/data/wody.wody/files/features.arff", 3);
+								WOD wod = new WOD("First WODy","",1);
+								wod.setStartTime(torben.get(0));
+								wod.setEndTime(torben.get(3));
 
-								txtPrediction.setText("Predictions");
-								for (String prediction : torben) {
-									txtPrediction.append("    "+prediction+"\n");
-								}
+								TimeExercise jumpingJacks = new TimeExercise("Jumping jacks",20);
+								TimeExercise twists = new TimeExercise("twists",20);
+								TimeExercise kettleSwings = new TimeExercise("Kettle Swings",20);
+
+								jumpingJacks.setTotalTime(torben.get(1)-torben.get(0));
+								twists.setTotalTime(torben.get(2)-torben.get(1));
+								kettleSwings.setTotalTime(torben.get(3)-torben.get(2));
+
+								wod.addTimeExercise(jumpingJacks);
+								wod.addTimeExercise(twists);
+								wod.addTimeExercise(kettleSwings);
+
+								wod_summary_fragment fragment = new wod_summary_fragment();
+								fragment.setWod(wod);
+								FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+								FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+								fragmentTransaction.replace(R.id.frame, fragment);
+								fragmentTransaction.addToBackStack(null);
+								fragmentTransaction.commit();
+
+//								wod_summary_fragment mainfragment = new wod_summary_fragment();
+//								mainfragment.setWod(wod);
+//								android.support.v4.app.FragmentTransaction fm = CollectorActivity.this.getActivity().getSupportFragmentManager().beginTransaction();
+//								fm.replace(R.id.frame, mainfragment);
+//								fm.commit();
+
+//								txtPrediction.setText("Predictions");
+//								for (Long prediction : torben) {
+//									txtPrediction.append("    "+prediction+"\n");
+//								}
 							}
 						}, 1000);
 

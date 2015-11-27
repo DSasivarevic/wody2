@@ -1,6 +1,8 @@
 package models;
 
 import android.content.Context;
+import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import controllers.Globals;
 import weka.classifiers.Classifier;
@@ -33,6 +36,9 @@ public class ExercisePrediction {
     private Classifier cls = null;
     private Instances instance = null;
     private TextView txtPrediction;
+    private BufferedWriter out;
+    private ArrayList<Long> timestamps = new ArrayList<Long>();
+    String[] splits = {"Jump_up", "Frontal_elevation_of_arms", "Knees_bending_(crouching)"};
 
     public ExercisePrediction(Context context, String modelName) {
 
@@ -46,48 +52,20 @@ public class ExercisePrediction {
     }
 
     //get prediction from arff
-    public ArrayList<String> getPrediction(Context context, String arffName, int k){
+    public ArrayList<Long> getPrediction(Context context, String arffName, int k){
         Instances instances = null;
         ArrayList<String> predictionArray = new ArrayList<String>();
 
-//        String ss="";
-//        String fileName = "predictions.txt";
-//        try {
-//            FileOutputStream fileos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
-//            FileInputStream fileis = context.openFileInput(fileName);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            FileOutputStream fileout=context.openFileOutput(fileName, context.MODE_PRIVATE);
-//            OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
-//            outputWriter.write("test");
-//            outputWriter.close();
-//            Log.e("TESTING","test");
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            FileInputStream fileIn=context.openFileInput(fileName);
-//            InputStreamReader InputRead= new InputStreamReader(fileIn);
-//
-//            char[] inputBuffer= new char[4];
-//
-//            int charRead;
-//
-//            while ((charRead=InputRead.read(inputBuffer))>0) {
-//                // char to string conversion
-//                String readstring=String.copyValueOf(inputBuffer,0,charRead);
-//                ss +=readstring;
-//            }
-//            Log.e("Test inputStream", ss.toString());
-//            InputRead.close();}catch(Exception e){
-//
-//            e.printStackTrace();
-//        }
-
+        try {
+            File root = Environment.getExternalStorageDirectory();
+            if (root.canWrite()){
+                File predictionFile = new File(root, "prediction.txt");
+                FileWriter predictionWriter = new FileWriter(predictionFile);
+                out = new BufferedWriter(predictionWriter);
+            }
+        } catch (IOException e) {
+            Log.e("TAG", "Could not write file " + e.getMessage());
+        }
 
         try {
             FileInputStream arffFile = new FileInputStream(new File(arffName));
@@ -104,22 +82,12 @@ public class ExercisePrediction {
         int s=0;
         int f=0;
 
-//        int tempInstanceCount = 0;
-//        Map<Double,Double> tempList = new HashMap<>();
-//        tempList.put(0.0,0.0);
-//        tempList.put(1.0,0.0);
-//        tempList.put(2.0,0.0);
         instances.setClassIndex(67);
-//        Log.e("TESTING", "" + instances.classAttribute().enumerateValues());
-//        instances.classAttribute().numValues();
-
 
         for (int i=0; i<instances.size();i++){
-//            double[] destributionValue = null;
             instances.instance(i).setClassMissing();
             double value = 0.0;
             try {
-//                destributionValue = cls.distributionForInstance(instances.get(i));
                 String tmp = "";
                 value = cls.classifyInstance(instances.instance(i));
 
@@ -127,55 +95,27 @@ public class ExercisePrediction {
                 e.printStackTrace();
             }
 
-//            //prediction based on 3 points - only for testing ----------------
-//            if(tempInstanceCount < 4){
-//                tempInstanceCount++;
-//            }else{
-//                tempInstanceCount = 0;
-//                double predictionValue = 0.0;
-//
-//                double maxValueInMap=(Collections.max(tempList.values()));
-//                for (Map.Entry<Double, Double> entry : tempList.entrySet()) {  // Itrate through hashmap
-//                    if (entry.getValue()==maxValueInMap) {
-//                        predictionValue = entry.getKey();     // Print the key with max value
-//                    }
-//                }
-////                System.out.println(tempList.toString());
-//                System.out.println("Improved prediction: "+instances.classAttribute().value((int) predictionValue));
-//
-//                tempList.put(0.0, 0.0);
-//                tempList.put(1.0, 0.0);
-//                tempList.put(2.0, 0.0);
-//            }
-//
-//                tempList.put(0.0,tempList.get(0.0)+ destributionValue[0]);
-//                tempList.put(1.0,tempList.get(1.0)+ destributionValue[1]);
-//                tempList.put(2.0,tempList.get(2.0)+ destributionValue[2]);
-//
-//            //-------------------------------------------------------------
-
             String prediction = instances.classAttribute().value((int) value);
             predictionArray.add(prediction);
 
-            if(instances.get(i).toString(3).equals(prediction) ){
-                s++;
-                System.out.println("TRUE ------ real: "+ instances.get(i).toString(3)+ "   prediction: "+prediction);
-            }else if(instances.get(i).toString(3).equals("'"+prediction+"'") ){
-                s++;
-                System.out.println("True ------ real: "+ instances.get(i).toString(3)+ "   prediction: "+prediction);
-            }else {//!originalTrain.get(i).toString(3).equals("Push-ups")) {
-                f++;
-                System.out.println("FALSE ------ real: " + instances.get(i).toString(3) + "   prediction: " + prediction);
+            try {
+                out.write(prediction+"\n");
+                out.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
-        System.out.println("true: "+s);
-        System.out.println("false: " + f);
+        try{
+            out.close();
+            Log.e("TESTING", "out closed");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+            return getSplitTimes(predictionArray);
+        }
 
-        return predictionArray;
-    }
-
-    //get prediction from instance
+        //get prediction from instance
     public String getPrediction(double x, double y, double z) throws Exception {
         instance = createInstance(x, y, z);
         double predictionValue = cls.classifyInstance(instance.firstInstance());
@@ -237,4 +177,103 @@ public class ExercisePrediction {
         return new Instances(in);
     }
 
+    public ArrayList<Long> getSplitTimes(ArrayList<String> predictionList){
+        loadTimestamps();
+
+        int max = 0, s1= 0, s2 = 0;
+        long start, end;
+        start = System.currentTimeMillis();
+        for(int i = 1; i < predictionList.size()-1; i++ ){
+            for(int j = i+1; j < predictionList.size(); j++){
+                //Test score
+                int tmp_score = getSplit(i, j, predictionList);
+
+                if(tmp_score > max){
+                    max = tmp_score;
+                    s1 = i;
+                    s2 = j;
+                }
+            }
+        }
+        end = System.currentTimeMillis();
+
+        int j = 0;
+        long startTime = timestamps.get(0);
+        long endTime = timestamps.get(timestamps.size()-1);
+        ArrayList<Long> splitTimes = new ArrayList<Long>();
+        splitTimes.add(startTime);
+        Log.e("TESTING"," start: "+splitTimes.get(0));
+        for(int i = 0; i < predictionList.size(); i++){
+            if(i < s1){
+                j = 0;
+                Log.e("TESTING"," "+splits[0]);
+            }else if(i > s1 && i <s2){
+                Log.e("TESTING", " " + splits[1]);
+                if(j == 0){
+                    splitTimes.add(timestamps.get(i));
+                    Log.e("TESTING", " split1: " + splitTimes.get(1));
+                }
+                j = 1;
+            }else if(i> s2){
+                Log.e("TESTING"," "+splits[2]);
+                if(j == 1){
+                    splitTimes.add(timestamps.get(i));
+                    Log.e("TESTING", " split2: " + splitTimes.get(2));
+                }
+                j = 2;
+            }
+        }
+        Log.e("TESTING"," end: "+splitTimes.get(splitTimes.size()-1));
+        splitTimes.add(endTime);
+        Log.e("TESTING", " " + splitTimes.toString());
+
+//        long JumpUp_diff = splitTimes.get(1)- splitTimes.get(0);
+//        long Frontal_diff = splitTimes.get(2)- splitTimes.get(1);
+//        long Knees_diff = splitTimes.get(3)- splitTimes.get(2);
+//
+//        //Total time
+//        long totalTime = endTime-startTime;
+
+        return splitTimes;
+    }
+
+    public void loadTimestamps(){
+        try {
+            Scanner scanner = new Scanner(new File("/storage/emulated/0/timestamps.csv"));
+
+            int i = 0;
+            while(scanner.hasNext()){
+                String tmp = scanner.nextLine();
+                String[] data = tmp.split(",");
+
+                i++;
+                if(i % 64 == 0){
+                    Log.e("TESTING","timestamp:"+data[3]);
+                    timestamps.add(Long.parseLong(data[3]));
+                }
+            }
+            Log.e("TESTING","timestamp loaded");
+
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            Log.e("TESTING", "timestamp not found");
+        }
+    }
+
+    public int getSplit(int s1, int s2, ArrayList<String> predictionList){
+        int score = 0;
+
+        for(int i = 0; i < predictionList.size(); i++){
+            String tmp = predictionList.get(i);
+            if(i < s1 && tmp.equals(splits[0])){
+                score++;
+            }else if(i > s1 && i <s2 && tmp.equals(splits[1])){
+                score++;
+            }else if(i> s2 && tmp.equals(splits[2])){
+                score++;
+            }
+        }
+
+        return score;
+    }
 }

@@ -58,7 +58,7 @@ public class SensorsService extends Service implements SensorEventListener {
 
 	private static ArrayBlockingQueue<Double> mAccBuffer;
 	public static final DecimalFormat mdf = new DecimalFormat("#.##");
-	private BufferedWriter out;
+	private static BufferedWriter out;
 
 	@Override
 	public void onCreate() {
@@ -74,12 +74,14 @@ public class SensorsService extends Service implements SensorEventListener {
 		try {
 			File root = Environment.getExternalStorageDirectory();
 			if (root.canWrite()){
-				File gpxfile = new File(root, "masterkevin.csv");
+				Log.e("TESTING","file opend");
+				File gpxfile = new File(root, "timestamps.csv");
 				FileWriter gpxwriter = new FileWriter(gpxfile);
 				out = new BufferedWriter(gpxwriter);
+				Log.e("Testing"," "+gpxfile.getAbsolutePath());
 			}
 		} catch (IOException e) {
-			Log.e("TAG", "Could not write file " + e.getMessage());
+			Log.e("TESTING", "Could not write file");
 		}
 
 		catch(Exception ex){

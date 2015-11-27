@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import models.TimeExercise;
 import models.WOD;
@@ -43,7 +44,7 @@ public class wod_summary_fragment extends Fragment {
         ArrayList<TimelineObject> timelineList = new ArrayList<>();
 
         for(TimeExercise w:wod.getTimeExercises()){
-            long totalTime = w.getEndTime() - w.getStartTime();
+            long totalTime = w.getTotalTime();
             TimelineObject tObject = new TimelineObject(w.getName(), totalTime);
             timelineList.add(tObject);
         }
@@ -56,6 +57,16 @@ public class wod_summary_fragment extends Fragment {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(1100, 800);
         bubbleChartView.setLayoutParams(layoutParams);
 
+        TextView totalTimeTextView = new TextView(rootview.getContext().getApplicationContext());
+        totalTimeTextView.setTextColor(Color.BLACK);
+        totalTimeTextView.setText("WOD Time: " + ((wod.getEndTime() - wod.getStartTime()) / 1000000000) + " seconds");
+        totalTimeTextView.setWidth(300);
+        totalTimeTextView.setTextSize(18);
+        totalTimeTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        totalTimeTextView.setPadding(0,0,0,20);
+
+        tableLayout.addView(totalTimeTextView);
+
         //generates timeline
         int counter = 1;
         for(TimelineObject to : timelineList){
@@ -63,16 +74,16 @@ public class wod_summary_fragment extends Fragment {
             String name = to.getName();
             long time = to.getTime();
 
-            TextView dateTextView = new TextView(rootview.getContext().getApplicationContext());
-            dateTextView.setTextColor(Color.BLACK);
-            dateTextView.setGravity(Gravity.RIGHT);
-            dateTextView.setWidth(300);
-            dateTextView.setTextSize(20);
-            row.addView(dateTextView);
+//            TextView dateTextView = new TextView(rootview.getContext().getApplicationContext());
+//            dateTextView.setTextColor(Color.BLACK);
+//            dateTextView.setGravity(Gravity.RIGHT);
+//            dateTextView.setWidth(300);
+//            dateTextView.setTextSize(20);
+//            row.addView(dateTextView);
 
             ImageView circleView = new ImageView(rootview.getContext().getApplicationContext());
             circleView.setImageResource(R.drawable.green_circle);
-            circleView.setPadding(40,0,40,0);
+            circleView.setPadding(10, 0, 40, 0);
             row.addView(circleView);
 
             LinearLayout ll = new LinearLayout(rootview.getContext().getApplicationContext());
@@ -84,7 +95,7 @@ public class wod_summary_fragment extends Fragment {
             nameTextView.setTextSize(20);
             TextView timeTextView = new TextView(rootview.getContext().getApplicationContext());
             timeTextView.setTypeface(null, Typeface.ITALIC);
-            timeTextView.setText(time+"min");
+            timeTextView.setText(time / 1000000000 + " seconds");
             timeTextView.setWidth(300);
             timeTextView.setTextSize(15);
             timeTextView.setTextColor(Color.BLACK);
@@ -125,5 +136,9 @@ public class wod_summary_fragment extends Fragment {
             wod.addTimeExercise(timeExercise);
         }
         wod.setStartTime(time);
+    }
+
+    public void setWod(WOD wod){
+        this.wod = wod;
     }
 }

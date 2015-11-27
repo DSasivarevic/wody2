@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/WODy2.iml" filepath="$PROJECT_DIR$/WODy2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wody2.iml" filepath="$PROJECT_DIR$/wody2.iml" />
       <module fileurl="file://$PROJECT_DIR$/wodywatch/wodywatch.iml" filepath="$PROJECT_DIR$/wodywatch/wodywatch.iml" />
     </modules>
   </component>
